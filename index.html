@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Car Insurance Policy Selection</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://www.gstatic.com/firebasejs/8.7.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.7.0/firebase-database.js"></script>
+  <script src="database.js"></script>
+  <script src="script.js"></script>
+  <script src="policyAnswerPaths.js"></script>
+  <script src="submit.js"></script>
+  <script src="retrieveFromDB.js"></script>
+  <script src="hideAndShow.js"></script>
+  <script src="logic.js"></script>
+</head>
+
+<body>
+  <div class="container"></div>
+  <div class="container">
+    <nav class="navbar navbar-expand-lg navbar-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">Coolabah Insurance</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+          aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ml-auto">
+            <!-- Add any additional navbar links here -->
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </div>
+
+  <section id="home" class="py-5 image-with-text">
+    <img id="wsydairport" src="tree.png" alt="background image">
+    <div class="container text-center">
+      <h1 class="display-3 text-light">Cover accidental damage to your car</h1>
+      <p class="lead text-light">and others’ cars or property</p>
+    </div>
+  </section>
+
+  <div class="container">
+    <h1 class="mt-4 mb-4">Choose Car Insurance Policy</h1>
+    <div class="row">
+      <div class="col-md-4 mb-4">
+        <div id='CTP' class="card">
+          <div class="card-body">
+            <h5 class="card-title" id="policyName-1">Compulsary Third Party (CTP)</h5>
+            <p class="card-text" id="policyStatement-1">The minimum protection to drive in Australia.</p>
+            <ul class="custom-list">
+              <li class="green-tick">Injuries to yourself from an accident you cause (for up to 26 weeks)</li>
+              <li class="green-tick">Injuries to someone else from an accident you cause</li>
+              <li class="red-cross">Damage to your car or property</li>
+              <li class="red-cross">Damage to someone else's car or property</li>
+            </ul>
+            <button class="btn btn-primary policy-button" id="policyButton-1"
+              onclick="handlePolicySelection(1)">Select</button>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 mb-4">
+        <div id="TPP" class="card">
+          <div class="card-body">
+            <h5 class="card-title" id="policyName-2">Third Party Property (TPP)</h5>
+            <p class="card-text" id="policyStatement-2">The mid range option of protection.</p>
+            <ul class="custom-list">
+              <li class="green-tick">Damage to your car if an uninsured driver causes an accident</li>
+              <li class="green-tick">Towing to a safe place if an uninsured driver causes an accident</li>
+              <li class="green-tick">Damage to other cars if you cause an accident</li>
+              <li class="red-cross">Fire or theft (up to $10,000 market value)</li>
+              <li class="red-cross">Damage to your car if you cause an accident</li>
+            </ul>
+            <button class="btn btn-primary policy-button" id="policyButton-2"
+              onclick="handlePolicySelection(2)">Select</button>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 mb-4">
+        <div id="COMP" class="card">
+          <div class="card-body">
+            <h5 class="card-title" id="policyName-3">Comprehensive (all TPP benefits plus)</h5>
+            <p class="card-text" id="policyStatement-3">The maximum protection for yourself and others.</p>
+            <ul class="custom-list">
+              <li class="green-tick">Accidental damage to your car no matter whose fault</li>
+              <li class="green-tick">Accidental damage to other cars no matter whose fault</li>
+              <li class="green-tick">Theft, storm damage, fire & flood damage to your car</li>
+              <li class="green-tick">$0 excess for glass damage to your car</li>
+              <li class="green-tick">Taxi fare after an accident</li>
+            </ul>
+            <button class="btn btn-primary policy-button" id="policyButton-3"
+              onclick="handlePolicySelection(3)">Select</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="selectedPolicy" class="mt-4"></div>
+
+    <h2>Not sure which policy to choose? Find out here:</h2>
+    <div id="questionnaire">
+      <div class="question">
+        <h4>Question 1:</h4>
+        <p>What's most important to you?</p>
+        <input type="radio" id="question1-option1" name="question1" value="1a" onclick="runFunctions('hide2')">
+        <label for="question1-option1">The maximum protection possible</label><br>
+        <input type="radio" id="question1-option2" name="question1" value="1b" onclick="runFunctions('hide2')">
+        <label for="question1-option2">The cheapest option available</label><br>
+        <input type="radio" id="question1-option3" name="question1" value="1c" onclick="runFunctions('show2')">
+        <label for="question1-option3">It depends on other factors, maybe a balance</label><br>
+      </div>
+      <div class="question" id="question2-container" style="display: none;">
+        <h4>Question 2:</h4>
+        <p>To save money, are you willing to risk not being covered for damage to your car if you are at fault in an
+          accident?</p>
+        <input type="radio" id="question2-option1" name="question2" value="2a" onclick="runFunctions('show3')">
+        <label for="question2-option1">Yes</label><br>
+        <input type="radio" id="question2-option2" name="question2" value="2b" onclick="runFunctions('show3')">
+        <label for="question2-option2">Maybe</label><br>
+        <input type="radio" id="question2-option3" name="question2" value="2c" onclick="runFunctions('hide3')">
+        <label for="question2-option3">No</label><br>
+      </div>
+      <div class="question" id="question3-container" style="display: none;">
+        <h4>Question 3:</h4>
+        <p>At an extra cost, do you want to be covered if you accidentally cause damage to someone else's car or
+          property?</p>
+        <input type="radio" id="question3-option1" name="question3" value="3a" onclick="runFunctions('lock-answers')">
+        <label for="question3-option1">Yes</label><br>
+        <input type="radio" id="question3-option2" name="question3" value="3b" onclick="runFunctions('lock-answers')">
+        <label for="question3-option2">Maybe</label><br>
+        <input type="radio" id="question3-option3" name="question3" value="3c" onclick="runFunctions('lock-answers')">
+        <label for="question3-option3">No</label><br>
+      </div>
+    </div>
+
+    <script>
+      function runFunctions(hideOrShow) {
+        submitQuestionnaire()
+        if (hideOrShow == "hide2") {
+          hideQuestion2()
+        }
+        if (hideOrShow == "show2") {
+          showQuestion2()
+        }
+        if (hideOrShow == "hide3") {
+          hideQuestion3()
+        }
+        if (hideOrShow == "show3") {
+          showQuestion3()
+        }
+      }
+    </script>
+
+    <div id="recommendedPolicy" class="mt-4"></div>
+    <!-- Refresh button -->
+    <button id="refreshBtn" class="btn btn-primary" style="display: none;" onclick="refreshPage()">restart
+      questionnaire</button>
+
+
+
+  </div>
+
+
+
+  </div>
+
+
+
+
+</body>
+
+</html>
